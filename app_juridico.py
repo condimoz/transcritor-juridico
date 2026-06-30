@@ -57,16 +57,35 @@ if botao_processar:
             # Personaliza a instrução da IA baseado na sua escolha
             if "Ipsis Litteris" in opcao_formato:
                 instrucao = (
-                    "Você é um transcritor judiciário oficial. Transcreva o áudio na íntegra "
-                    "mantendo a exata fidelidade das palavras faladas. "
-                    "É OBRIGATÓRIO estruturar a transcrição linha por linha, identificando o interlocutor, "
-                    "a minutagem aproximada [MM:SS] e o texto corrido da fala logo em seguida, exatamente neste padrão:\n\n"
-                    "Juiz - 01:23 - Texto completo da fala do juiz aqui...\n"
-                    "Reclamante - 01:45 - Texto completo da fala do reclamante aqui...\n"
-                    "Advogado - 02:10 - Texto completo da fala do advogado aqui...\n\n"
-                    "Não inclua tags como '(pergunta)' ou '(resposta)'. Siga estritamente o formato: Interlocutor - MM:SS - Texto da fala.\n"
-                    "Tente identificar os papéis (Juiz, Reclamante, Reclamado, Testemunha, Advogado) pelo contexto do diálogo. "
-                    "Se não puder identificar o papel com certeza, use 'Interlocutor 1', 'Interlocutor 2', etc."
+                    "Você é um transcritor judiciário especialista em audiências trabalhistas e cíveis. "
+                    "Sua missão principal é transcrever o áudio na íntegra, com máxima fidelidade e IDENTIFICAR OS PAPÉIS JURÍDICOS dos falantes.\n\n"
+                    
+                    "RITO E DINÂMICA DA AUDIÊNCIA TRABALHISTA (SIGA ESTA CRONOLOGIA):\n"
+                    "1. A PRIMEIRA FALA GERALMENTE É DO JUIZ: Ele inicia o ato, qualifica o depoente e faz as primeiras perguntas que entende pertinentes sobre o caso.\n"
+                    "2. REPOSTA DO DEPOENTE: Quem responde logo após as perguntas iniciais do Juiz é o RECLAMANTE ou a TESTEMUNHA.\n"
+                    "3. PERGUNTAS DOS ADVOGADOS: Somente após encerrar suas perguntas, o JUIZ passa a palavra para os ADVOGADOS formularem as reperguntas.\n"
+                    "4. SISTEMA MEDIADO: O ADVOGADO faz a pergunta ao JUIZ (ex: 'Pergunte se tinha cartão de ponto'), o JUIZ repassa ou refaz a pergunta para o depoente, ou apenas autoriza (ex: 'Pode responder', 'Diga').\n\n"
+                    
+                    "CRITÉRIOS DE IDENTIFICAÇÃO DOS PAPÉIS:\n"
+                    "- JUIZ / JUÍZA: Quem abre a audiência, faz as perguntas iniciais, dita os termos da ata, indefere perguntas e autoriza o depoente a responder.\n"
+                    "- ADVOGADO / ADVOGADA: Quem fala apenas após o Juiz franquear a palavra, formulando reperguntas direcionadas à mesa técnica.\n"
+                    "- RECLAMANTE / REQUERENTE: O autor da ação que responde diretamente ao Juiz sobre o contrato de trabalho e rotina.\n"
+                    "- TESTEMUNHA: A pessoa que presta compromisso legal e responde sobre os fatos que presenciou.\n"
+                    "- PREPOSTO / RECLAMADO: Quem responde pela empresa ré.\n\n"
+                    
+                    "É PROIBIDO usar termos genéricos como 'Interlocutor' ou 'Voz' se pelo contexto da dinâmica acima for possível deduzir o papel do falante.\n\n"
+                    
+                    "ESTRUTURA DA FORMATAÇÃO (OBRIGATÓRIO LINHA POR LINHA):\n"
+                    "Escreva exatamente neste padrão: Papel Identificado - Minutagem [MM:SS] - Texto da fala.\n"
+                    "Exemplo:\n"
+                    "Juiz - 00:10 - Senhor Reclamante, qual era o seu horário de saída contratual?\n"
+                    "Reclamante - 00:14 - Em tese era às 17h, Excelência, mas a gente sempre passava.\n"
+                    "Juiz - 00:18 - Palavra deferida ao patrono do reclamante para reperguntas.\n"
+                    "Advogado - 00:22 - Excelência, por gentileza, pergunte se o tempo de dobra era registrado no espelho.\n"
+                    "Juiz - 00:26 - Havia registro dessas horas extras no ponto? Responda.\n"
+                    "Reclamante - 00:29 - Não, o gerente pedia para bater o ponto e voltar para a linha.\n\n"
+                    
+                    "Não inclua marcações extras como (pergunta) ou (resposta). Apenas o papel, o tempo e a fala exata."
                 )
             elif "Peça Processual" in opcao_formato:
                 instrucao = (
@@ -81,6 +100,7 @@ if botao_processar:
                     "levantados e 3) Próximos passos/prazos definidos. Mantenha o tom estritamente profissional."
                 )
 
+            # Mantido a versão 2.5 conforme sua preferência
             model = genai.GenerativeModel("gemini-2.5-flash")
             response = model.generate_content([instrucao, audio_file])
             
