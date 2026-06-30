@@ -1,6 +1,7 @@
 import streamlit as str
 import google.generativeai as genai
 import os
+import time
 
 # Configuração da página para o celular
 str.set_page_config(page_title="Degravação Jurídica", page_icon="⚖️", layout="centered")
@@ -15,10 +16,10 @@ if api_key:
 else:
     str.error("Chave de API do Gemini não configurada.")
 
-# Interface de Upload (Ideal para áudios longos de 15/20 min gravados no celular)
+# Interface de Upload (Agora suportando explicitamente mp4)
 arquivo_audio = str.file_uploader("📂 Selecione o áudio ou vídeo do seu celular:", type=["mp4", "mp3", "wav", "m4a", "aac", "ogg"])
 
-# Opções de formatação jurídica para você escolher antes de transcrever
+# Opções de formatação jurídica
 opcao_formato = str.selectbox(
     "📝 Escolha o tom/formatação do documento:",
     [
@@ -37,14 +38,23 @@ if botao_processar:
             with open(nome_arquivo, "wb") as f:
                 f.write(arquivo_audio.getbuffer())
             
-            str.info("⏳ Processando arquivo pesado... Enviando para os servidores seguros da IA.")
+            str.info("⏳ Processando arquivo... Enviando para os servidores seguros da IA.")
             
-            # Faz o upload seguro para a API do Gemini (suporta arquivos de até 2GB)
+            # Faz o upload seguro para a API do Gemini
             audio_file = genai.upload_file(path=nome_arquivo)
             
-            str.info("🤖 A Inteligência Artificial está analisando o áudio e aplicando o viés jurídico...")
+            # ESPERA ATÉ O ARQUIVO ESTAR ATIVO (Evita o Erro 400 status ACTIVE)
+            str.info("🤖 O Google está processando o formato do arquivo... Aguarde um instante.")
+            while audio_file.state.name == "PROCESSING":
+                time.sleep(3)
+                audio_file = genai.get_file(audio_file.name)
+                
+            if audio_file.state.name == "FAILED":
+                raise Exception("O processamento do arquivo falhou nos servidores da IA.")
             
-            # Personaliza a instrução da IA baseado na sua escolha da tela
+            str.info("✍️ Aplicando o viés jurídico e formatando o texto...")
+            
+            # Personaliza a instrução da IA baseado na sua escolha
             if "Ipsis Litteris" in opcao_formato:
                 instrucao = (
                     "Você é um transcritor judiciário oficial. Transcreva o áudio a seguir na íntegra, "
@@ -64,16 +74,13 @@ if botao_processar:
                     "levantados e 3) Próximos passos/prazos definidos. Mantenha o tom estritamente profissional."
                 )
 
-            model = genai.GenerativeModel("gemini-2.5-flash")
+            model = genai.GenerativeModel("gemini-1.5-flash")
             response = model.generate_content([instrucao, audio_file])
             
             str.success("🎉 Degravação concluída com sucesso!")
             str.subheader("📄 Documento Jurídico Gerado:")
-            
-            # Exibe o texto formatado na tela do celular
             str.write(response.text)
             
-            # Permite baixar o arquivo direto para o celular para enviar por WhatsApp ou e-mail
             str.download_button(
                 label="📥 Baixar Documento (.txt)", 
                 data=response.text, 
@@ -83,8 +90,11 @@ if botao_processar:
             
             # Limpa o arquivo temporário do servidor
             os.remove(nome_arquivo)
+            genai.delete_file(audio_file.name)
             
         except Exception as e:
             str.error(f"Ops, ocorreu um erro no processamento: {e}")
+            if 'nome_arquivo' in locals() and os.path.exists(nome_arquivo):
+                os.remove(nome_arquivo)
     else:
-        str.warning("Por favor, selecione ou grave um arquivo de áudio primeiro.")
+        str.warning("Por favor, selecione ou grave um arquivo de áudio/vídeo primeiro.")
