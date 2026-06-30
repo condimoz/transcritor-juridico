@@ -74,7 +74,7 @@ if botao_processar:
                     "levantados e 3) Próximos passos/prazos definidos. Mantenha o tom estritamente profissional."
                 )
 
-            model = genai.GenerativeModel("gemini-1.5-flash")
+            model = genai.GenerativeModel("gemini-2.5-flash")
             response = model.generate_content([instrucao, audio_file])
             
             str.success("🎉 Degravação concluída com sucesso!")
