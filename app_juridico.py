@@ -23,7 +23,7 @@ arquivo_audio = str.file_uploader("📂 Selecione o áudio ou vídeo do seu celu
 opcao_formato = str.selectbox(
     "📝 Escolha o tom/formatação do documento:",
     [
-        "Transcrição Ipsis Litteris (Exata, com minutagem, ideal para depoimentos e provas)",
+        "Transcrição Ipsis Litteris (Padrão de Audiência: Interlocutor - Minutagem - Fala)",
         "Ditado de Peça Processual (Formatação formal em tópicos/parágrafos)",
         "Resumo de Audiência/Reunião (Pontos principais e deliberações)"
     ]
@@ -57,11 +57,16 @@ if botao_processar:
             # Personaliza a instrução da IA baseado na sua escolha
             if "Ipsis Litteris" in opcao_formato:
                 instrucao = (
-                    "Você é um transcritor judiciário oficial. Transcreva o áudio a seguir na íntegra, "
-                    "mantendo a exata fidelidade das palavras faladas (ideal para termos de depoimento). "
-                    "É OBRIGATÓRIO incluir a minutagem (marcas de tempo no formato [MM:SS] ou [HH:MM:SS]) "
-                    "a cada nova fala, mudança de interlocutor ou a cada parágrafo de forma frequente. "
-                    "Corrija apenas ruídos extremos, organize em parágrafos lógicos e identifique falantes se houver distinção clara."
+                    "Você é um transcritor judiciário oficial. Transcreva o áudio na íntegra "
+                    "mantendo a exata fidelidade das palavras faladas. "
+                    "É OBRIGATÓRIO estruturar a transcrição linha por linha, identificando o interlocutor, "
+                    "a minutagem aproximada e o teor da fala, exatamente seguindo este padrão de exemplo:\n\n"
+                    "Juiz - [01:23] - (pergunta) Texto completo da fala do juiz aqui...\n"
+                    "Reclamante - [01:45] - (resposta) Texto completo da resposta do reclamante aqui...\n"
+                    "Advogado - [02:10] - (manifestação) Texto da fala do advogado...\n\n"
+                    "Tente identificar os papéis (Juiz, Reclamante, Reclamado, Testemunha, Advogado) pelo contexto. "
+                    "Caso não consiga diferenciar o papel exato, use 'Interlocutor 1', 'Interlocutor 2', etc. "
+                    "Mantenha gagueiras ou repetições relevantes para o contexto jurídico se necessário, mantendo o rigor do Ipsis Litteris."
                 )
             elif "Peça Processual" in opcao_formato:
                 instrucao = (
