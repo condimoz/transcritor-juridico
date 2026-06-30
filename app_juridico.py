@@ -16,7 +16,7 @@ else:
     str.error("Chave de API do Gemini não configurada.")
 
 # Interface de Upload (Ideal para áudios longos de 15/20 min gravados no celular)
-arquivo_audio = str.file_uploader("📂 Selecione o áudio do seu celular:", type=["mp3", "wav", "m4a", "aac", "mp4", "ogg"])
+arquivo_audio = str.file_uploader("📂 Selecione o áudio do seu celular:", type=["mp3", "wav", "m4a", "aac", "ogg"])
 
 # Opções de formatação jurídica para você escolher antes de transcrever
 opcao_formato = str.selectbox(
