@@ -16,14 +16,14 @@ if api_key:
 else:
     str.error("Chave de API do Gemini não configurada.")
 
-# Interface de Upload (Agora suportando explicitamente mp4)
+# Interface de Upload
 arquivo_audio = str.file_uploader("📂 Selecione o áudio ou vídeo do seu celular:", type=["mp4", "mp3", "wav", "m4a", "aac", "ogg"])
 
 # Opções de formatação jurídica
 opcao_formato = str.selectbox(
     "📝 Escolha o tom/formatação do documento:",
     [
-        "Transcrição Ipsis Litteris (Exata, ideal para depoimentos e provas)",
+        "Transcrição Ipsis Litteris (Exata, com minutagem, ideal para depoimentos e provas)",
         "Ditado de Peça Processual (Formatação formal em tópicos/parágrafos)",
         "Resumo de Audiência/Reunião (Pontos principais e deliberações)"
     ]
@@ -43,7 +43,7 @@ if botao_processar:
             # Faz o upload seguro para a API do Gemini
             audio_file = genai.upload_file(path=nome_arquivo)
             
-            # ESPERA ATÉ O ARQUIVO ESTAR ATIVO (Evita o Erro 400 status ACTIVE)
+            # ESPERA ATÉ O ARQUIVO ESTAR ATIVO
             str.info("🤖 O Google está processando o formato do arquivo... Aguarde um instante.")
             while audio_file.state.name == "PROCESSING":
                 time.sleep(3)
@@ -59,6 +59,8 @@ if botao_processar:
                 instrucao = (
                     "Você é um transcritor judiciário oficial. Transcreva o áudio a seguir na íntegra, "
                     "mantendo a exata fidelidade das palavras faladas (ideal para termos de depoimento). "
+                    "É OBRIGATÓRIO incluir a minutagem (marcas de tempo no formato [MM:SS] ou [HH:MM:SS]) "
+                    "a cada nova fala, mudança de interlocutor ou a cada parágrafo de forma frequente. "
                     "Corrija apenas ruídos extremos, organize em parágrafos lógicos e identifique falantes se houver distinção clara."
                 )
             elif "Peça Processual" in opcao_formato:
