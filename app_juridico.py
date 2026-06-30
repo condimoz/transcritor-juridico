@@ -60,13 +60,13 @@ if botao_processar:
                     "Você é um transcritor judiciário oficial. Transcreva o áudio na íntegra "
                     "mantendo a exata fidelidade das palavras faladas. "
                     "É OBRIGATÓRIO estruturar a transcrição linha por linha, identificando o interlocutor, "
-                    "a minutagem aproximada e o teor da fala, exatamente seguindo este padrão de exemplo:\n\n"
-                    "Juiz - [01:23] - (pergunta) Texto completo da fala do juiz aqui...\n"
-                    "Reclamante - [01:45] - (resposta) Texto completo da resposta do reclamante aqui...\n"
-                    "Advogado - [02:10] - (manifestação) Texto da fala do advogado...\n\n"
-                    "Tente identificar os papéis (Juiz, Reclamante, Reclamado, Testemunha, Advogado) pelo contexto. "
-                    "Caso não consiga diferenciar o papel exato, use 'Interlocutor 1', 'Interlocutor 2', etc. "
-                    "Mantenha gagueiras ou repetições relevantes para o contexto jurídico se necessário, mantendo o rigor do Ipsis Litteris."
+                    "a minutagem aproximada [MM:SS] e o texto corrido da fala logo em seguida, exatamente neste padrão:\n\n"
+                    "Juiz - 01:23 - Texto completo da fala do juiz aqui...\n"
+                    "Reclamante - 01:45 - Texto completo da fala do reclamante aqui...\n"
+                    "Advogado - 02:10 - Texto completo da fala do advogado aqui...\n\n"
+                    "Não inclua tags como '(pergunta)' ou '(resposta)'. Siga estritamente o formato: Interlocutor - MM:SS - Texto da fala.\n"
+                    "Tente identificar os papéis (Juiz, Reclamante, Reclamado, Testemunha, Advogado) pelo contexto do diálogo. "
+                    "Se não puder identificar o papel com certeza, use 'Interlocutor 1', 'Interlocutor 2', etc."
                 )
             elif "Peça Processual" in opcao_formato:
                 instrucao = (
